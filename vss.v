@@ -26,12 +26,6 @@ fn main() {
 	app.parse(os.args)
 }
 
-fn normalise_paths(paths []string) []string {
-	mut res := paths.map(it.replace(os.path_separator, '/'))
-	res.sort()
-	return res
-}
-
 fn get_paths(path string) []string {
 	mds := os.walk_ext(path, '.md')
 	return mds
