@@ -17,8 +17,7 @@ tasks:
   test:
     desc: Run test
     cmds:
-      - v test vss_test.v 
-      - task: clean
+      - v test .
 
   vet:
     desc: Report suspicious code constructs
