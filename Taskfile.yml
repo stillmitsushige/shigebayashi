@@ -1,0 +1,31 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+  
+  doc:
+    desc: Update module document
+    cmds:
+      - v doc -o docs/ -f markdown .
+      - mv docs/index.md docs/vdotenv.md
+
+  test:
+    desc: Run test
+    cmds:
+      - v test vss_test.v 
+      - task: clean
+
+  vet:
+    desc: Report suspicious code constructs
+    cmds:
+      - v vet *.v
+
+  format:
+    desc: Format .v files
+    cmds:
+      - v fmt -w *.v
