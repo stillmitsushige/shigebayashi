@@ -10,7 +10,11 @@ fn main() {
 		version: '0.0.0'
 		description: 'static site generator'
 		execute: fn (cmd cli.Command) ? {
-			paths := get_paths("docs")
+			paths := get_paths("testfiles")
+			if paths.len == 0 {
+				println("Cloud not retrieve path")
+				return
+			}
 			for path in paths {
 				println(path)
 			}
