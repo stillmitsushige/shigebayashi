@@ -1,0 +1,83 @@
+name: release
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  Release-on-Ubuntu:
+    name: Release on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.9.1
+      - name: make x86_64
+        run: make dist
+      - name: make aarch64
+        run: ./misc/build-aarch64.sh
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/**
+
+  Release-on-Darwin:
+    name: Release on Darwin
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.9.1
+      - name: make x86_64
+        run: make dist
+      - name: make aarch64
+        run: ./misc/build-aarch64.sh
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/**
+
+  Release-on-Windows:
+    name: Release on Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      #- uses: goto-bus-stop/setup-zig@v1
+      #  with:
+      #    version: 0.9.1
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: mingw-w64-x86_64-toolchain
+          msystem: MINGW64
+          path-type: inherit
+      - name: make x86_64
+        shell: msys2 {0}
+        run: |
+          mingw32-make dist
+      #- name: make aarch64
+      #  shell: msys2 {0}
+      #  run: |
+      #    mingw32-make ARCH=aarch64 CC="zig cc -target aarch64-windows"
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/**
