@@ -7,3 +7,6 @@ vss
 *.dylib
 *.dll
 vls.log
+
+# generated test files
+index.html
