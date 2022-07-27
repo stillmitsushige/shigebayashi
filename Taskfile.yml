@@ -3,10 +3,6 @@
 version: '3'
 
 tasks:
-  default:
-    cmds:
-      - echo "{{.GREETING}}"
-    silent: true
   
   doc:
     desc: Update module document
@@ -28,3 +24,8 @@ tasks:
     desc: Format .v files
     cmds:
       - v fmt -w *.v
+    
+  clean:
+    desc: Clean test files
+    cmds:
+      - rm -rf dist/

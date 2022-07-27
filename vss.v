@@ -4,13 +4,7 @@ import os
 import cli
 import markdown
 
-const markdown_text = '
-# Open Sea
-
-A static site generator
-
-- [GitHub](https://github.com/zztkm)
-'
+const default_index = 'index.md'
 
 const default_dist = 'dist'
 
@@ -43,15 +37,19 @@ fn generate_index_page() ? {
 		println(path)
 	}
 
-	// index_html := $embed_file("layouts/_index.html")
-	title := 'tsurutatakumi.info'
-	contents := markdown.to_html(markdown_text)
+	index_md := os.read_file(default_index)?
 
+	// for $tmpl value
+	title := 'tsurutatakumi.info'
+	contents := markdown.to_html(index_md)
+
+	// tmpl に変数を割り当てるのは今の所無理
+	// https://github.com/vlang/v/discussions/15068
 	index_html := $tmpl('layouts/_index.html')
 	dist := default_dist
 
 	if !os.exists(dist) {
-		os.mkdir_all(dist, ) // build/_dist/ のようなPATHが渡されても作成できるようにmkdir_allを使う
+		os.mkdir_all(dist)? // build/_dist/ のようなPATHが渡されても作成できるようにmkdir_allを使う
 	}
 	path := os.join_path(dist, 'index.html')
 	os.write_file(path, index_html)?
