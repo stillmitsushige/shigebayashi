@@ -11,7 +11,7 @@ const default_dist = 'dist'
 fn main() {
 	mut app := cli.Command{
 		name: 'vss'
-		version: '0.0.0'
+		version: '0.0.1'
 		description: 'static site generator'
 		execute: fn (cmd cli.Command) ? {
 			generate_index_page()?
@@ -28,15 +28,6 @@ fn get_paths(path string) []string {
 }
 
 fn generate_index_page() ? {
-	paths := get_paths('testfiles')
-	if paths.len == 0 {
-		println('Cloud not retrieve path')
-		return
-	}
-	for path in paths {
-		println(path)
-	}
-
 	index_md := os.read_file(default_index)?
 
 	// for $tmpl value
