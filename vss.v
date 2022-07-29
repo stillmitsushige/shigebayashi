@@ -2,7 +2,10 @@ module main
 
 import os
 import cli
+import toml
 import markdown
+
+const default_config = 'config.toml'
 
 const default_index = 'index.md'
 
@@ -11,7 +14,7 @@ const default_dist = 'dist'
 fn main() {
 	mut app := cli.Command{
 		name: 'vss'
-		version: '0.0.1'
+		version: '0.0.2'
 		description: 'static site generator'
 		execute: fn (cmd cli.Command) ? {
 			generate_index_page()?
@@ -28,10 +31,12 @@ fn get_paths(path string) []string {
 }
 
 fn generate_index_page() ? {
+	config_text := os.read_file(default_config)?
+	config := toml.parse_text(config_text)?
 	index_md := os.read_file(default_index)?
 
 	// for $tmpl value
-	title := 'tsurutatakumi.info'
+	title := config.value('title').string()
 	contents := markdown.to_html(index_md)
 
 	// tmpl に変数を割り当てるのは今の所無理
