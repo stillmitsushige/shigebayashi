@@ -30,9 +30,14 @@ fn get_paths(path string) []string {
 	return mds
 }
 
+fn get_config_map() map[string]string {
+	mut confg_map := map[string]string{}
+
+	// https://modules.vlang.io/toml.html
+	config := toml.parse_file(default_config)?
+}
+
 fn generate_index_page() ? {
-	config_text := os.read_file(default_config)?
-	config := toml.parse_text(config_text)?
 	index_md := os.read_file(default_index)?
 
 	// for $tmpl value

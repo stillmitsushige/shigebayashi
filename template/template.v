@@ -8,6 +8,8 @@ struct Template {
 	template string
 }
 
-fn parse() {}
+fn parse(template string, target map[string]any) string {
+}
+
 
 fn execute() {}
