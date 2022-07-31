@@ -4,8 +4,13 @@ import os
 import cli
 import toml
 import markdown
+import template
 
 const default_config = 'config.toml'
+
+const config_params = ['title']
+
+const default_template = 'layouts/_index.html'
 
 const default_index = 'index.md'
 
@@ -31,22 +36,27 @@ fn get_paths(path string) []string {
 }
 
 fn get_config_map() map[string]string {
-	mut confg_map := map[string]string{}
+	mut config_map := map[string]string{}
 
 	// https://modules.vlang.io/toml.html
-	config := toml.parse_file(default_config)?
+	config := toml.parse_file(default_config) or { return config_map }
+
+	for param in config_params {
+		config_map[param] = config.value(param).string()
+	}
+	return config_map
 }
 
 fn generate_index_page() ? {
 	index_md := os.read_file(default_index)?
-
-	// for $tmpl value
-	title := config.value('title').string()
 	contents := markdown.to_html(index_md)
+	mut config_map := get_config_map()
+	config_map['contents'] = contents
 
-	// tmpl に変数を割り当てるのは今の所無理
-	// https://github.com/vlang/v/discussions/15068
-	index_html := $tmpl('layouts/_index.html')
+	template_content := os.read_file(default_template)?
+
+	index_html := template.parse(template_content, config_map)
+
 	dist := default_dist
 
 	if !os.exists(dist) {

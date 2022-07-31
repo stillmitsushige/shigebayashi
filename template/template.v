@@ -1,15 +1,12 @@
-/*
-何も作ってない
-*/
-
 module template
 
-struct Template {
-	template string
+pub fn parse(template string, target map[string]string) string {
+	mut content := template
+	for key in target.keys() {
+		at_key := '@' + key
+		value := target[key]
+		// assign to content
+		content = content.replace(at_key, value)
+	}
+	return content
 }
-
-fn parse(template string, target map[string]any) string {
-}
-
-
-fn execute() {}
