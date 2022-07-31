@@ -19,7 +19,7 @@ const default_dist = 'dist'
 fn main() {
 	mut app := cli.Command{
 		name: 'vss'
-		version: '0.0.2'
+		version: '0.0.3'
 		description: 'static site generator'
 		execute: fn (cmd cli.Command) ? {
 			generate_index_page()?
