@@ -19,20 +19,46 @@ v vss.v
 
 ## Usage
 
-Setup contents
+### Setup contents
+
+Currently, be sure to configure the following
+
 ```
-❯ tree
+❯ tree  
 .
+├── config.toml
+├── dist
+│   └── index.html
 ├── index.md
-└── vss (executable)
+└── layouts
+    └── _index.html
+```
 
 ❯ cat index.md
+```markdown
 # Open Sea
 
 A static site generator
 
 - [GitHub](https://github.com/zztkm)
+```
 
+❯ cat config.toml 
+```toml
+title = "Open Sea"
+```
+
+❯ cat layouts/_index.html 
+```html
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>@title</title>
+</head>
+<body>
+    @contents
+</body>
 ```
 
 Build your site
@@ -40,7 +66,8 @@ Build your site
 vss
 ```
 
-Output
+### Output
+
 ```
 ❯ tree
 .
@@ -48,10 +75,10 @@ Output
 │   └── index.html
 ├── index.md
 └── vss
-
-1 directory, 3 files
+```
 
 ❯ cat dist/index.html 
+```html
 <!DOCTYPE html>
 
 <head>
