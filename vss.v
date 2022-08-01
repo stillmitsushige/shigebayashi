@@ -22,7 +22,7 @@ fn main() {
 		version: '0.0.3'
 		description: 'static site generator'
 		execute: fn (cmd cli.Command) ? {
-			generate_index_page()?
+			generate_pages()?
 		}
 	}
 
@@ -30,6 +30,7 @@ fn main() {
 	app.parse(os.args)
 }
 
+// get_paths
 fn get_paths(path string) []string {
 	mds := os.walk_ext(path, '.md')
 	return mds
@@ -47,22 +48,30 @@ fn get_config_map() map[string]string {
 	return config_map
 }
 
-fn generate_index_page() ? {
-	index_md := os.read_file(default_index)?
-	contents := markdown.to_html(index_md)
-	mut config_map := get_config_map()
-	config_map['contents'] = contents
+fn get_html_filename(md_path string) string {
+	mut file_name := os.file_name(md_path)
+	file_name = file_name.replace('.md', '')
+	return file_name + '.html'
+}
 
-	template_content := os.read_file(default_template)?
-
-	index_html := template.parse(template_content, config_map)
-
+fn generate_pages() ? {
 	dist := default_dist
-
 	if !os.exists(dist) {
 		os.mkdir_all(dist)? // build/_dist/ のようなPATHが渡されても作成できるようにmkdir_allを使う
 	}
-	path := os.join_path(dist, 'index.html')
-	os.write_file(path, index_html)?
+
+	template_content := os.read_file(default_template)?
+	mut config_map := get_config_map()
+
+	md_paths := get_paths('.')
+	for path in md_paths {
+		md := os.read_file(path)?
+		contents := markdown.to_html(md)
+		config_map['contents'] = contents
+		html := template.parse(template_content, config_map)
+		filename := get_html_filename(path)
+		html_path := os.join_path(dist, filename)
+		os.write_file(html_path, html)?
+	}
 	return
 }
