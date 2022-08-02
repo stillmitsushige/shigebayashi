@@ -54,6 +54,14 @@ fn get_html_filename(md_path string) string {
 	return file_name + '.html'
 }
 
+// parse_link convert markdown relative links to html relative links
+fn parse_link(contents string) string {
+	lines := contents.split_into_lines()
+	for line in lines {
+		println(line)
+	}
+}
+
 fn generate_pages() ? {
 	dist := default_dist
 	if !os.exists(dist) {
