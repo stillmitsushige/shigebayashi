@@ -54,12 +54,15 @@ fn get_html_filename(md_path string) string {
 	return file_name + '.html'
 }
 
-// parse_link convert markdown relative links to html relative links
-fn parse_link(contents string) string {
+// pre_proc_md_to_html convert markdown relative links to html relative links
+fn pre_proc_md_to_html(contents string) string {
 	lines := contents.split_into_lines()
-	for line in lines {
+	mut parsed_lines := []string{len: lines.len} 
+	for i, iine in contents.split_into_lines() {
 		println(line)
+		parsed_lines[i] = line
 	}
+	return parsed_lines.join("\n")
 }
 
 fn generate_pages() ? {
@@ -73,7 +76,8 @@ fn generate_pages() ? {
 
 	md_paths := get_paths('.')
 	for path in md_paths {
-		md := os.read_file(path)?
+		mut md := os.read_file(path)?
+		md = pre_proc_md_to_html(md)
 		contents := markdown.to_html(md)
 		config_map['contents'] = contents
 		html := template.parse(template_content, config_map)
