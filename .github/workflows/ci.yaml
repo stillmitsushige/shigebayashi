@@ -1,9 +1,10 @@
-name: release
+name: CI
 
 on:
   push:
-    tags:
-    - "v*.*.*"
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -24,12 +25,12 @@ jobs:
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v2
 
+      - name: Check if code is formatted
+        run: |
+          v fmt -diff .
+          v fmt -verify .          
       - name: Build ${{ github.event.repository.name }}
-        run: task dist
-      
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, "refs/tags/")
-        with:
-          files: |
-            dist/**
+        run: v .
+
+      - name: Run Tests
+        run: v test .

@@ -2,6 +2,9 @@
 
 version: '3'
 
+env:
+  TARGET: vss
+
 tasks:
   
   doc:
@@ -30,10 +33,17 @@ tasks:
     cmds:
       - rm -rf dist/
   
+  dist:
+    desc: Mkdir dist
+    cmds:
+      - mkdir -p dist
+      - task: build
+      - cp $TARGET dist/
+
   build:
     desc: Build vss
     cmds:
-      - v .
+      - v . -o $TARGET
     
   example:
     desc: Setup for example
