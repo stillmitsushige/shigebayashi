@@ -33,7 +33,7 @@ tasks:
   build:
     desc: Build vss
     cmds:
-      - v vss.v
+      - v .
     
   example:
     desc: Setup for example
