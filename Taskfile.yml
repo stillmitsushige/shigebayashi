@@ -29,3 +29,15 @@ tasks:
     desc: Clean test files
     cmds:
       - rm -rf dist/
+  
+  build:
+    desc: Build vss
+    cmds:
+      - v vss.v
+    
+  example:
+    desc: Setup for example
+    cmds:
+      - rm example/vss
+      - task: build
+      - cp vss example
