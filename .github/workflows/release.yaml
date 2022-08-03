@@ -24,9 +24,12 @@ jobs:
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v2
 
+      - name: Install deps
+        run: task setup
+
       - name: Build ${{ github.event.repository.name }}
         run: task dist
-      
+
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, "refs/tags/")
