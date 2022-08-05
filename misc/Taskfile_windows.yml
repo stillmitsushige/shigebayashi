@@ -14,5 +14,5 @@ tasks:
       - mkdir -p dist
       - mkdir -p {{.ARCHIVE_DIR}}
       - mv {{.TARGET}} {{.ARCHIVE_DIR}}
-      - zip -r {{.ARCHIVE_DIR}}.tar.gz {{.ARCHIVE_DIR}}
+      - 7z a {{.ARCHIVE_DIR}}.zip {{.ARCHIVE_DIR}}
       - rm -rf {{.ARCHIVE_DIR}}
