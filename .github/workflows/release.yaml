@@ -35,7 +35,7 @@ jobs:
             dist/**
 
   Release-on-Ubuntu:
-    name: Release on Windows
+    name: Release on Ubuntu 
     runs-on: ubuntu-latest
     steps:
       - name: Install V
@@ -63,7 +63,7 @@ jobs:
             dist/**
 
   Release-on-Darwin:
-    name: Release on Windows
+    name: Release on Darwin
     runs-on: macos-latest
     steps:
       - name: Install V
