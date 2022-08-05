@@ -14,5 +14,5 @@ tasks:
       - mkdir -p dist
       - mkdir -p {{.ARCHIVE_DIR}}
       - mv {{.TARGET}} {{.ARCHIVE_DIR}}
-      - 7z a {{.ARCHIVE_DIR}}.zip {{.ARCHIVE_DIR}}
+      - powershell Compress-Archive -Path {{.ARCHIVE_DIR}} -DestinationPath {{.ARCHIVE_DIR}}.zip
       - rm -rf {{.ARCHIVE_DIR}}
