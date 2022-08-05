@@ -2,10 +2,19 @@
 
 version: '3'
 
-env:
+vars:
   TARGET: vss
 
+includes:
+  build: ./misc/Taskfile_{{OS}}.yml
+
 tasks:
+
+  echo:
+    cmds:
+      - echo {{.ARCHIVE_DIR}}
+    vars:
+      ARCHIVE_DIR: "{{.TARGET}}_{{OS}}_{{ARCH}}"
   
   setup:
     desc: Setup vss project
@@ -41,14 +50,14 @@ tasks:
   dist:
     desc: Mkdir dist
     cmds:
-      - mkdir -p dist
+      - task: clean
       - task: build
-      - cp $TARGET dist/
+      - task build:archive
 
   build:
     desc: Build vss
     cmds:
-      - v . -o $TARGET
+      - v . -o {{.TARGET}}
     
   example:
     desc: Setup for example
