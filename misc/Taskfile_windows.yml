@@ -14,5 +14,6 @@ tasks:
       - mkdir -p dist
       - mkdir -p {{.ARCHIVE_DIR}}
       - mv {{.TARGET}} {{.ARCHIVE_DIR}}
+      - cp README.md {{.ARCHIVE_DIR}}
       - powershell Compress-Archive -Path {{.ARCHIVE_DIR}} -DestinationPath {{.ARCHIVE_DIR}}.zip
       - rm -rf {{.ARCHIVE_DIR}}
