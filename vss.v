@@ -5,11 +5,13 @@ import cli
 import toml
 import regex
 import markdown
+
 import template
 
 const default_config = 'config.toml'
 
-const config_params = ['title']
+// Allowed parameters
+const config_params = ['title', "description"]
 
 const default_template = 'layouts/_index.html'
 
