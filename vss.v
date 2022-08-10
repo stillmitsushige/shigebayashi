@@ -14,6 +14,8 @@ const config_params = ['title', 'description']
 
 const default_template = 'layouts/_index.html'
 
+const defautl_static = "static"
+
 const default_index = 'index.md'
 
 const default_dist = 'dist'
@@ -24,8 +26,18 @@ fn main() {
 		version: '0.0.5'
 		description: 'static site generator'
 		execute: fn (cmd cli.Command) ? {
-			generate_pages()?
+			println(cmd.help_message())
 		}
+		commands: [
+			cli.Command{
+				name: 'build'
+				description: 'build your site'
+				usage: 'vss build'
+				execute: fn (cmd cli.Command) ? {
+					generate_pages()?
+				}
+			},
+		]
 	}
 
 	app.setup()
