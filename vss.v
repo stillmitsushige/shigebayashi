@@ -10,7 +10,7 @@ import template
 const default_config = 'config.toml'
 
 // Allowed parameters
-const config_params = ['title', 'description']
+const config_params = ['title', 'description', 'baseUrl']
 
 const default_template = 'layouts/index.html'
 
@@ -44,14 +44,15 @@ fn main() {
 	app.parse(os.args)
 }
 
-fn get_config_map() map[string]string {
+fn get_config_map() ?map[string]string {
 	mut config_map := map[string]string{}
 
 	// https://modules.vlang.io/toml.html
-	config := toml.parse_file(default_config) or { return config_map }
+	config := toml.parse_file(default_config)?
 
 	for param in config_params {
-		config_map[param] = config.value(param).string()
+		v := config.value_opt(param)?
+		config_map[param] = v.string()
 	}
 	return config_map
 }
@@ -63,15 +64,12 @@ fn get_html_filename(md_path string) string {
 }
 
 // pre_proc_md_to_html convert markdown relative links to html relative links
-fn pre_proc_md_to_html(contents string) string {
+fn pre_proc_md_to_html(contents string) ?string {
 	lines := contents.split_into_lines()
 	mut parsed_lines := []string{len: lines.len}
-	for i, line in contents.split_into_lines() {
-		mut re := regex.regex_opt(r'\[.+\]\(.+\.md\)') or {
-			eprintln('error: $err')
-			continue
-		}
+	mut re := regex.regex_opt(r'\[.+\]\(.+\.md\)')?
 
+	for i, line in contents.split_into_lines() {
 		start, end := re.find(line)
 		if start >= 0 && end > start {
 			parsed_lines[i] = line.replace('.md', '.html')
@@ -84,20 +82,23 @@ fn pre_proc_md_to_html(contents string) string {
 
 fn build() ? {
 	dist := default_dist
-	if !os.exists(dist) {
-		os.mkdir_all(dist)? // build/_dist/ のようなPATHが渡されても作成できるようにmkdir_allを使う
+	if os.exists(dist) {
+		os.rmdir_all(dist)?
+		os.mkdir_all(dist)?
+	} else {
+		os.mkdir_all(dist)?
 	}
 
 	// copy static files
 	os.cp_all(defautl_static, dist, false)?
 
 	template_content := os.read_file(default_template)?
-	mut config_map := get_config_map()
+	mut config_map := get_config_map()?
 
 	md_paths := os.walk_ext('.', '.md')
 	for path in md_paths {
 		mut md := os.read_file(path)?
-		md = pre_proc_md_to_html(md)
+		md = pre_proc_md_to_html(md)?
 		contents := markdown.to_html(md)
 		config_map['contents'] = contents
 		html := template.parse(template_content, config_map)
