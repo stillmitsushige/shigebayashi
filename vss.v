@@ -51,7 +51,9 @@ fn get_config_map() ?map[string]string {
 	config := toml.parse_file(default_config)?
 
 	for param in config_params {
-		v := config.value_opt(param)?
+		v := config.value_opt(param) or {
+			continue
+		}
 		config_map[param] = v.string()
 	}
 	return config_map
