@@ -7,3 +7,9 @@ fn normalise_paths(paths []string) []string {
 	res.sort()
 	return res
 }
+
+fn test_get_html_filename() {
+	test_path := 'index.md'
+	html_name := get_html_filename(test_path) 
+	assert html_name == 'index.html'
+}
