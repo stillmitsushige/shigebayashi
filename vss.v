@@ -12,9 +12,9 @@ const default_config = 'config.toml'
 // Allowed parameters
 const config_params = ['title', 'description']
 
-const default_template = 'layouts/_index.html'
+const default_template = 'layouts/index.html'
 
-const defautl_static = "static"
+const defautl_static = 'static'
 
 const default_index = 'index.md'
 
@@ -34,7 +34,7 @@ fn main() {
 				description: 'build your site'
 				usage: 'vss build'
 				execute: fn (cmd cli.Command) ? {
-					generate_pages()?
+					build()?
 				}
 			},
 		]
@@ -42,12 +42,6 @@ fn main() {
 
 	app.setup()
 	app.parse(os.args)
-}
-
-// get_paths
-fn get_paths(path string) []string {
-	mds := os.walk_ext(path, '.md')
-	return mds
 }
 
 fn get_config_map() map[string]string {
@@ -88,16 +82,19 @@ fn pre_proc_md_to_html(contents string) string {
 	return parsed_lines.join('\n')
 }
 
-fn generate_pages() ? {
+fn build() ? {
 	dist := default_dist
 	if !os.exists(dist) {
 		os.mkdir_all(dist)? // build/_dist/ のようなPATHが渡されても作成できるようにmkdir_allを使う
 	}
 
+	// copy static files
+	os.cp_all(defautl_static, dist, false)?
+
 	template_content := os.read_file(default_template)?
 	mut config_map := get_config_map()
 
-	md_paths := get_paths('.')
+	md_paths := os.walk_ext('.', '.md')
 	for path in md_paths {
 		mut md := os.read_file(path)?
 		md = pre_proc_md_to_html(md)
