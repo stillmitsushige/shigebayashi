@@ -10,6 +10,6 @@ fn normalise_paths(paths []string) []string {
 
 fn test_get_html_filename() {
 	test_path := 'index.md'
-	html_name := get_html_filename(test_path) 
+	html_name := get_html_filename(test_path)
 	assert html_name == 'index.html'
 }
