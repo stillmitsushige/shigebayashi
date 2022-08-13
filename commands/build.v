@@ -1,4 +1,4 @@
-module main
+module commands
 
 import os
 import cli
@@ -20,37 +20,24 @@ const default_index = 'index.md'
 
 const default_dist = 'dist'
 
-fn main() {
-	mut app := cli.Command{
-		name: 'vss'
-		version: '0.0.7'
-		description: 'static site generator'
+fn new_build_cmd() cli.Command {
+	return cli.Command{
+		name: 'build'
+		description: 'build your site'
+		usage: 'vss build'
 		execute: fn (cmd cli.Command) ? {
-			println(cmd.help_message())
+			build()?
 		}
-		commands: [
-			cli.Command{
-				name: 'build'
-				description: 'build your site'
-				usage: 'vss build'
-				execute: fn (cmd cli.Command) ? {
-					build()?
-				}
-			},
-		]
 	}
-
-	app.setup()
-	app.parse(os.args)
 }
 
 fn get_config_map() ?map[string]string {
 	mut config_map := map[string]string{}
 
 	// https://modules.vlang.io/toml.html
-	config := toml.parse_file(default_config)?
+	config := toml.parse_file(commands.default_config)?
 
-	for param in config_params {
+	for param in commands.config_params {
 		v := config.value_opt(param) or { continue }
 		config_map[param] = v.string()
 	}
@@ -81,7 +68,7 @@ fn pre_proc_md_to_html(contents string) ?string {
 }
 
 fn build() ? {
-	dist := default_dist
+	dist := commands.default_dist
 	if os.exists(dist) {
 		os.rmdir_all(dist)?
 		os.mkdir_all(dist)?
@@ -90,11 +77,11 @@ fn build() ? {
 	}
 
 	// copy static files
-	if os.exists(defautl_static) {
-		os.cp_all(defautl_static, dist, false)?
+	if os.exists(commands.defautl_static) {
+		os.cp_all(commands.defautl_static, dist, false)?
 	}
 
-	template_content := os.read_file(default_template)?
+	template_content := os.read_file(commands.default_template)?
 	mut config_map := get_config_map()?
 
 	md_paths := os.walk_ext('.', '.md')

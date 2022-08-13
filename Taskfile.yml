@@ -30,7 +30,7 @@ tasks:
   test:
     desc: Run test
     cmds:
-      - v test .
+      - v test commands/
 
   vet:
     desc: Report suspicious code constructs
@@ -41,6 +41,8 @@ tasks:
     desc: Format .v files
     cmds:
       - v fmt -w *.v
+      - v fmt -w commands/*.v
+      - v fmt -w template/*.v
     
   clean:
     desc: Clean test files
