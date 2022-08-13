@@ -90,7 +90,9 @@ fn build() ? {
 	}
 
 	// copy static files
-	os.cp_all(defautl_static, dist, false)?
+	if os.exists(defautl_static) {
+		os.cp_all(defautl_static, dist, false)?
+	}
 
 	template_content := os.read_file(default_template)?
 	mut config_map := get_config_map()?
