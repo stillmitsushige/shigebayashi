@@ -7,6 +7,10 @@ A static site generator
 vss is still under development and the API is not stable.
 Be aware that destructive changes will be made if you use it!
 
+## Feature
+
+- Create site content with markdown
+- Easy to use
 
 ## Install
 
