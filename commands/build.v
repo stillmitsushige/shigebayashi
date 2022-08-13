@@ -2,6 +2,8 @@ module commands
 
 import os
 import cli
+import log
+import time
 import toml
 import regex
 import markdown
@@ -68,6 +70,11 @@ fn pre_proc_md_to_html(contents string) ?string {
 }
 
 fn build() ? {
+	mut logger := log.Log{}
+	logger.set_level(log.Level.info)
+	logger.info()
+	mut sw := time.new_stopwatch()
+
 	dist := commands.default_dist
 	if os.exists(dist) {
 		os.rmdir_all(dist)?
@@ -95,5 +102,8 @@ fn build() ? {
 		html_path := os.join_path(dist, filename)
 		os.write_file(html_path, html)?
 	}
+
+	sw.stop()
+	println(sw.elapsed().seconds())
 	return
 }
