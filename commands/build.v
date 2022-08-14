@@ -32,7 +32,7 @@ fn new_build_cmd() cli.Command {
 			logger.set_level(log.Level.info)
 			build(mut logger) or {
 				logger.error(err.msg())
-				println("Build failed")
+				println('Build failed')
 			}
 		}
 	}
@@ -80,22 +80,22 @@ fn pre_proc_md_to_html(contents string) ?string {
 }
 
 fn build(mut logger log.Log) ? {
-	println("Start building")
+	println('Start building')
 	mut sw := time.new_stopwatch()
 
 	dist := commands.default_dist
 	if os.exists(dist) {
-		logger.info("re-create dist dir")
+		logger.info('re-create dist dir')
 		os.rmdir_all(dist)?
 		os.mkdir_all(dist)?
 	} else {
-		logger.info("create dist dir")
+		logger.info('create dist dir')
 		os.mkdir_all(dist)?
 	}
 
 	// copy static files
 	if os.exists(commands.defautl_static) {
-		logger.info("copy static files")
+		logger.info('copy static files')
 		os.cp_all(commands.defautl_static, dist, false)?
 	}
 
@@ -103,7 +103,7 @@ fn build(mut logger log.Log) ? {
 	mut config_map := get_config_map()?
 
 	md_paths := os.walk_ext('.', '.md')
-	logger.info("start md to html")
+	logger.info('start md to html')
 	for path in md_paths {
 		mut md := os.read_file(path)?
 		md = pre_proc_md_to_html(md)?
@@ -114,9 +114,9 @@ fn build(mut logger log.Log) ? {
 		html_path := os.join_path(dist, filename)
 		os.write_file(html_path, html)?
 	}
-	logger.info("end md to html")
+	logger.info('end md to html')
 
 	sw.stop()
-	println("Total in " + sw.elapsed().milliseconds().str() + " ms")
+	println('Total in ' + sw.elapsed().milliseconds().str() + ' ms')
 	return
 }
