@@ -1,6 +1,8 @@
 # vss
 
-A static site generator
+Easy-to-use static site generator
+
+![CI](https://github.com/zztkm/vss/workflows/CI/badge.svg)
 
 ## Caution
 
@@ -9,16 +11,23 @@ Be aware that destructive changes will be made if you use it!
 
 ## Feature
 
-- Create site content with markdown
 - Easy to use
+- Create site content with markdown
 
-## Install
+## Installation
+
+### Get the binary
+Download from [Releases](https://github.com/zztkm/vss/releases)
+
+### Build from source
 
 ```
 git clone https://github.com/zztkm/vss.git
 cd vss
 
-v vss.v
+v install markdown
+
+v . -o vss
 ```
 
 ## Usage
@@ -119,3 +128,7 @@ dist
 <p><a href="./about.html">about page</a></p>
 </body>
 ```
+
+## Example
+
+Examples can be found at the [example](https://github.com/zztkm/vss/tree/main/example) directory.
