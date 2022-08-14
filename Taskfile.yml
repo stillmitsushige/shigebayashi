@@ -67,3 +67,9 @@ tasks:
       - rm -rf example/vss
       - task: build
       - cp vss example
+      - task: example-run
+
+  example-run:
+    dir: example
+    cmds:
+      - ./vss build
