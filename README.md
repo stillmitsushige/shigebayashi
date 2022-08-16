@@ -2,6 +2,8 @@
 
 Easy-to-use static site generator
 
+![image](image.gif)
+
 ![CI](https://github.com/zztkm/vss/workflows/CI/badge.svg)
 
 ## Caution
