@@ -1,8 +1,14 @@
 # vss
 
-Easy-to-use static site generator
+vss is an easy to use static site generator.
+With `layout/index.html`, Markdown content, and a little configuration, you can easily build your website!
 
-![image](image.gif)
+- **Easy** to use
+- Create site content with **Markdown**
+
+<p align="center">
+  <img src="./image.gif" alt="vss" width="738">
+</p>
 
 ![CI](https://github.com/zztkm/vss/workflows/CI/badge.svg)
 
@@ -11,10 +17,6 @@ Easy-to-use static site generator
 vss is still under development and the API is not stable.
 Be aware that destructive changes will be made if you use it!
 
-## Feature
-
-- Easy to use
-- Create site content with markdown
 
 ## Installation
 
@@ -43,11 +45,6 @@ Currently, be sure to configure the following
 .
 ├── about.md
 ├── config.toml
-├── dist
-│   ├── css
-│   │   └── main.css
-│   └── js
-│       └── main.js
 ├── index.md
 ├── layouts
 │   └── index.html
