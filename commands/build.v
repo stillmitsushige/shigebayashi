@@ -56,10 +56,22 @@ fn get_config_map() ?map[string]string {
 	return config_map
 }
 
-fn get_html_filename(md_path string) string {
+fn get_html_path(md_path string) string {
 	mut file_name := os.file_name(md_path)
-	file_name = file_name.replace('.md', '')
-	return file_name + '.html'
+	file_name = file_name.replace('.md', '.html')
+	dir := os.dir(md_path)
+	if dir == '.' {
+		return file_name
+	}
+
+	return os.join_path(dir, file_name)
+}
+
+fn normalise_paths(paths []string) []string {
+	cwd := os.getwd() + os.path_separator
+	mut res := paths.map(os.abs_path(it).replace(cwd, '').replace(os.path_separator, '/'))
+	res.sort()
+	return res
 }
 
 // pre_proc_md_to_html convert markdown relative links to html relative links
@@ -102,7 +114,7 @@ fn build(mut logger log.Log) ? {
 	template_content := os.read_file(commands.default_template)?
 	mut config_map := get_config_map()?
 
-	md_paths := os.walk_ext('.', '.md')
+	md_paths := normalise_paths(os.walk_ext('.', '.md'))
 	logger.info('start md to html')
 	for path in md_paths {
 		mut md := os.read_file(path)?
@@ -110,9 +122,12 @@ fn build(mut logger log.Log) ? {
 		contents := markdown.to_html(md)
 		config_map['contents'] = contents
 		html := template.parse(template_content, config_map)
-		filename := get_html_filename(path)
-		html_path := os.join_path(dist, filename)
-		os.write_file(html_path, html)?
+		html_path := get_html_path(path)
+		dist_path := os.join_path(dist, html_path)
+		if !os.exists(os.dir(dist_path)) {
+			os.mkdir_all(os.dir(dist_path))?
+		}
+		os.write_file(dist_path, html)?
 	}
 	logger.info('end md to html')
 
