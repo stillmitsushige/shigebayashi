@@ -19,6 +19,22 @@ disruptive changes may be made!
 
 ## Installation
 
+### (Recommended) Install Script
+
+With Shell(For Mac & Linux):
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/vssio/vss_install/main/install.sh | sh
+```
+
+With PowerShell(for Windows):
+
+```powershell
+irm https://raw.githubusercontent.com/vssio/vss_install/main/install.ps1 | iex
+```
+
+More information: https://github.com/vssio/vss_install
+
 ### Get the binary
 
 Download from [Releases](https://github.com/zztkm/vss/releases)
