@@ -1,7 +1,7 @@
 # vss
 
-vss is an easy to use static site generator.
-With `layout/index.html`, Markdown content, and a little configuration, you can easily build your website!
+vss is an easy to use static site generator. With `layout/index.html`, Markdown
+content, and a little configuration, you can easily build your website!
 
 - **Easy** to use
 - Create site content with **Markdown**
@@ -14,13 +14,13 @@ With `layout/index.html`, Markdown content, and a little configuration, you can 
 
 ## Caution
 
-vss is still under development and the API is not stable.
-Be aware that destructive changes will be made if you use it!
-
+vss is still under development and the API is not stable. Be aware that
+disruptive changes may be made!
 
 ## Installation
 
 ### Get the binary
+
 Download from [Releases](https://github.com/zztkm/vss/releases)
 
 ### Build from source
@@ -53,10 +53,10 @@ Currently, be sure to configure the following
     │   └── main.css
     └── js
         └── main.js
-
 ```
 
 ❯ cat index.md
+
 ```markdown
 # Open Sea
 
@@ -67,14 +67,16 @@ A static site generator
 [about page](./about.md)
 ```
 
-❯ cat config.toml 
+❯ cat config.toml
+
 ```toml
 title = "Open Sea"
 description = "Takumi Tsuruta's home page"
 baseUrl = 'https://zztkm.github.io/vss/'
 ```
 
-❯ cat layouts/index.html 
+❯ cat layouts/index.html
+
 ```html
 <!DOCTYPE html>
 
@@ -91,11 +93,13 @@ baseUrl = 'https://zztkm.github.io/vss/'
 ```
 
 Build your site
+
 ```
 vss build
 ```
 
 Output
+
 ```
 ❯ tree dist
 dist
@@ -107,7 +111,8 @@ dist
     └── main.js
 ```
 
-❯ cat dist/index.html 
+❯ cat dist/index.html
+
 ```html
 <!DOCTYPE html>
 
@@ -130,4 +135,5 @@ dist
 
 ## Example
 
-Examples can be found at the [example](https://github.com/zztkm/vss/tree/main/example) directory.
+Examples can be found at the
+[example](https://github.com/zztkm/vss/tree/main/example) directory.

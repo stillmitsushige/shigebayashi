@@ -4,4 +4,8 @@ A static site generator
 
 - [GitHub](https://github.com/zztkm)
 
-[about page](./about.md)
+## Pages
+
+- [about page](./about.md)
+- post
+  - [first](./post/first.md)
