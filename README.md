@@ -17,39 +17,6 @@ content, and a little configuration, you can easily build your website!
 vss is still under development and the API is not stable. Be aware that
 disruptive changes may be made!
 
-## Installation
-
-### (Recommended) Install Script
-
-With Shell(For Mac & Linux):
-
-```shell
-curl -fsSL https://raw.githubusercontent.com/vssio/vss_install/main/install.sh | sh
-```
-
-With PowerShell(for Windows):
-
-```powershell
-irm https://raw.githubusercontent.com/vssio/vss_install/main/install.ps1 | iex
-```
-
-More information: https://github.com/vssio/vss_install
-
-### Get the binary
-
-Download from [Releases](https://github.com/zztkm/vss/releases)
-
-### Build from source
-
-```
-git clone https://github.com/zztkm/vss.git
-cd vss
-
-v install markdown
-
-v . -o vss
-```
-
 ## Usage
 
 ### Setup contents
@@ -153,3 +120,36 @@ dist
 
 Examples can be found at the
 [example](https://github.com/zztkm/vss/tree/main/example) directory.
+
+## Installation
+
+### (Recommended) Install Script
+
+With Shell(For Mac & Linux):
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/vssio/vss_install/main/install.sh | sh
+```
+
+With PowerShell(for Windows):
+
+```powershell
+irm https://raw.githubusercontent.com/vssio/vss_install/main/install.ps1 | iex
+```
+
+More information: https://github.com/vssio/vss_install
+
+### Get the binary
+
+Download from [Releases](https://github.com/zztkm/vss/releases)
+
+### Build from source
+
+```
+git clone https://github.com/zztkm/vss.git
+cd vss
+
+v install markdown
+
+v . -o vss
+```
