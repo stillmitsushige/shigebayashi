@@ -6,7 +6,7 @@ import cli
 pub fn execute() {
 	mut app := cli.Command{
 		name: 'vss'
-		version: '0.0.10'
+		version: '0.0.11'
 		description: 'static site generator'
 		execute: fn (cmd cli.Command) ? {
 			println(cmd.help_message())

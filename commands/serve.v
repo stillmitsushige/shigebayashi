@@ -87,8 +87,12 @@ fn watch(path string, mut logger log.Log) {
 		watchers << w
 	}
 
+	ignore := "." + os.path_separator +  "dist"
 	for {
 		for mut w in watchers {
+			if w.path.starts_with(ignore) {
+				continue
+			}
 			now := os.file_last_mod_unix(w.path)
 			if now > w.time_stamp {
 				println('modified file: $w.path')
@@ -112,7 +116,7 @@ fn serve(mut logger log.Log) ? {
 		port: commands.cport
 	}
 	println('http://localhost:$commands.cport')
-	w := go watch('dist', mut logger)
+	w := go watch('.', mut logger)
 	server.listen_and_serve() or { panic(err) }
 
 	w.wait()
