@@ -87,7 +87,7 @@ fn watch(path string, mut logger log.Log) {
 		watchers << w
 	}
 
-	ignore := "." + os.path_separator +  "dist"
+	ignore := '.' + os.path_separator + 'dist'
 	for {
 		for mut w in watchers {
 			if w.path.starts_with(ignore) {
