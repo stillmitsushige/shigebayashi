@@ -146,7 +146,7 @@ Download from [Releases](https://github.com/zztkm/vss/releases)
 ### Build from source
 
 ```
-git clone https://github.com/zztkm/vss.git
+git clone https://github.com/vssio/vss.git
 cd vss
 
 v install markdown
