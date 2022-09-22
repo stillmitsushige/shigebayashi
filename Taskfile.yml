@@ -41,8 +41,9 @@ tasks:
     desc: Format .v files
     cmds:
       - v fmt -w *.v
-      - v fmt -w commands/*.v
-      - v fmt -w template/*.v
+      - v fmt -w commands
+      - v fmt -w internal/template
+      - v fmt -w internal/config/
     
   clean:
     desc: Clean test files

@@ -7,12 +7,12 @@ import time
 import toml
 import regex
 import markdown
-import template
+import internal.template
 
 const default_config = 'config.toml'
 
 // Allowed parameters
-const config_params = ['title', 'description', 'baseUrl']
+const config_params = ['title', 'description', 'baseUrl', 'build']
 
 const default_template = 'layouts/index.html'
 
