@@ -4,15 +4,12 @@ import os
 import cli
 import log
 import time
-import toml
 import regex
 import markdown
 import internal.template
+import internal.config
 
 const default_config = 'config.toml'
-
-// Allowed parameters
-const config_params = ['title', 'description', 'baseUrl', 'build']
 
 const default_template = 'layouts/index.html'
 
@@ -41,19 +38,6 @@ fn new_build_cmd() cli.Command {
 fn read_file(filename string) ?string {
 	contents := os.read_file(filename.trim_space())?
 	return contents
-}
-
-fn get_config_map() ?map[string]string {
-	mut config_map := map[string]string{}
-
-	// https://modules.vlang.io/toml.html
-	toml_str := read_file(commands.default_config)?
-	config := toml.parse_text(toml_str)?
-	for param in commands.config_params {
-		v := config.value_opt(param) or { continue }
-		config_map[param] = v.string()
-	}
-	return config_map
 }
 
 fn get_html_path(md_path string) string {
@@ -112,11 +96,19 @@ fn build(mut logger log.Log) ? {
 	}
 
 	template_content := os.read_file(commands.default_template)?
-	mut config_map := get_config_map()?
+
+	toml_text := read_file(commands.default_config)?
+	config := config.load(toml_text)?
+	mut config_map := config.as_map()
 
 	md_paths := normalise_paths(os.walk_ext('.', '.md'))
 	logger.info('start md to html')
 	for path in md_paths {
+		file_name := os.file_name(path)
+		if file_name in config.build.ignore_files {
+			logger.info('$file_name is included in ignore_files, skip build')
+			continue
+		}
 		mut md := os.read_file(path)?
 		md = pre_proc_md_to_html(md)?
 		contents := markdown.to_html(md)

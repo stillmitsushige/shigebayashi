@@ -2,12 +2,16 @@ module config
 
 import toml
 
+// template_params list of field names to convert as_map
+const template_params = ['title', 'description', 'base_url']
+
 // Build settings for build
 struct Build {
 pub mut:
 	ignore_files []string
 }
 
+// Config general settings for vss
 struct Config {
 pub mut:
 	build       Build
@@ -16,7 +20,7 @@ pub mut:
 	base_url    string
 }
 
-// load 
+// load
 pub fn load(toml_text string) ?Config {
 	doc := toml.parse_text(toml_text)?
 
@@ -27,6 +31,10 @@ pub fn load(toml_text string) ?Config {
 }
 
 // as_map for template.parse
-pub fn (c Config) as_map() ?map[string]string {
-
+pub fn (c Config) as_map() map[string]string {
+	mut mp := map[string]string{}
+	mp['title'] = c.title
+	mp['description'] = c.description
+	mp['base_url'] = c.base_url
+	return mp
 }

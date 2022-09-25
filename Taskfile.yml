@@ -30,7 +30,7 @@ tasks:
   test:
     desc: Run test
     cmds:
-      - v test commands/
+      - v test .
 
   vet:
     desc: Report suspicious code constructs
@@ -62,6 +62,11 @@ tasks:
     cmds:
       - v . -o {{.TARGET}}
     
+  prod-build:
+    desc: Build vss for production
+    cmds:
+      - v -prod . -o {{.TARGET}}
+
   example:
     desc: Setup for example
     cmds:
