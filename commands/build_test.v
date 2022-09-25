@@ -1,7 +1,5 @@
 module commands
 
-import os
-
 fn test_get_html_filename() {
 	test_path := 'index.md'
 	mut html_name := get_html_path(test_path)
