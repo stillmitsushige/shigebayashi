@@ -22,14 +22,17 @@ const default_dist = 'dist'
 struct Builder {
 mut:
 	config           config.Config
+	logger           log.Log
 	dist             string
 	static_dir       string
 	template_content string
 	config_map       map[string]string
 }
 
-fn new_builder() Builder {
-	return Builder{}
+fn new_builder(logger log.Log) Builder {
+	return Builder{
+		logger: logger
+	}
 }
 
 fn new_build_cmd() cli.Command {
@@ -130,31 +133,30 @@ fn (b Builder) copy_static() ? {
 	}
 }
 
-fn build(mut logger log.Log) ? {
-	println('Start building')
-	mut sw := time.new_stopwatch()
-
-	mut b := new_builder()
-
-	// load config for build
-	b.load_config()?
-
+fn (mut b Builder) create_dist_dir() ? {
 	if os.exists(b.dist) {
-		logger.info('re-create dist dir')
+		b.logger.info('re-create dist dir')
 		os.rmdir_all(b.dist)?
 		os.mkdir_all(b.dist)?
 	} else {
-		logger.info('create dist dir')
+		b.logger.info('create dist dir')
 		os.mkdir_all(b.dist)?
 	}
+}
 
+fn build(mut logger log.Log) ? {
+	println('Start building')
+	mut sw := time.new_stopwatch()
+	mut b := new_builder(logger)
+	b.load_config()?
+	b.create_dist_dir()?
 	// copy static dir files
 	logger.info('copy static files')
 	b.copy_static()?
 
-	md_paths := normalise_paths(os.walk_ext('.', '.md'))
+	mds := normalise_paths(os.walk_ext('.', '.md'))
 	logger.info('start md to html')
-	for path in md_paths {
+	for path in mds {
 		// e.g. README.md
 		file_name := os.file_name(path)
 		// notify user that build was skipped
