@@ -19,6 +19,19 @@ const default_index = 'index.md'
 
 const default_dist = 'dist'
 
+struct Builder {
+mut:
+	config           config.Config
+	dist             string
+	static_dir       string
+	template_content string
+	config_map       map[string]string
+}
+
+fn new_builder() Builder {
+	return Builder{}
+}
+
 fn new_build_cmd() cli.Command {
 	return cli.Command{
 		name: 'build'
@@ -75,51 +88,81 @@ fn pre_proc_md_to_html(contents string) ?string {
 	return parsed_lines.join('\n')
 }
 
+fn get_md_content(path string) ?string {
+	md := os.read_file(path)?
+	return pre_proc_md_to_html(md)
+}
+
+fn get_content(path string) ?string {
+	md := get_md_content(path)?
+	return markdown.to_html(md)
+}
+
+fn (mut b Builder) md2html(md_path string) ? {
+	// get html body content from md
+	content := get_content(md_path)?
+	// want to change from contents to content
+	b.config_map['contents'] = content
+	html := template.parse(b.template_content, b.config_map)
+	html_path := get_html_path(md_path)
+	dist_path := os.join_path(b.dist, html_path)
+	if !os.exists(os.dir(dist_path)) {
+		os.mkdir_all(os.dir(dist_path))?
+	}
+	os.write_file(dist_path, html)?
+}
+
+fn (mut b Builder) load_config() ? {
+	toml_text := read_file(commands.default_config)?
+	config := config.load(toml_text)?
+	template_content := os.read_file(commands.default_template)?
+
+	b.config = config
+	b.dist = commands.default_dist
+	b.static_dir = commands.defautl_static
+	b.template_content = template_content
+	b.config_map = config.as_map()
+}
+
+fn (b Builder) copy_static() ? {
+	if os.exists(b.static_dir) {
+		os.cp_all(b.static_dir, b.dist, false)?
+	}
+}
+
 fn build(mut logger log.Log) ? {
 	println('Start building')
 	mut sw := time.new_stopwatch()
 
-	dist := commands.default_dist
-	if os.exists(dist) {
+	mut b := new_builder()
+
+	// load config for build
+	b.load_config()?
+
+	if os.exists(b.dist) {
 		logger.info('re-create dist dir')
-		os.rmdir_all(dist)?
-		os.mkdir_all(dist)?
+		os.rmdir_all(b.dist)?
+		os.mkdir_all(b.dist)?
 	} else {
 		logger.info('create dist dir')
-		os.mkdir_all(dist)?
+		os.mkdir_all(b.dist)?
 	}
 
-	// copy static files
-	if os.exists(commands.defautl_static) {
-		logger.info('copy static files')
-		os.cp_all(commands.defautl_static, dist, false)?
-	}
-
-	template_content := os.read_file(commands.default_template)?
-
-	toml_text := read_file(commands.default_config)?
-	config := config.load(toml_text)?
-	mut config_map := config.as_map()
+	// copy static dir files
+	logger.info('copy static files')
+	b.copy_static()?
 
 	md_paths := normalise_paths(os.walk_ext('.', '.md'))
 	logger.info('start md to html')
 	for path in md_paths {
+		// e.g. README.md
 		file_name := os.file_name(path)
-		if file_name in config.build.ignore_files {
+		// notify user that build was skipped
+		if file_name in b.config.build.ignore_files {
 			logger.info('$file_name is included in ignore_files, skip build')
 			continue
 		}
-		mut md := os.read_file(path)?
-		md = pre_proc_md_to_html(md)?
-		contents := markdown.to_html(md)
-		config_map['contents'] = contents
-		html := template.parse(template_content, config_map)
-		html_path := get_html_path(path)
-		dist_path := os.join_path(dist, html_path)
-		if !os.exists(os.dir(dist_path)) {
-			os.mkdir_all(os.dir(dist_path))?
-		}
-		os.write_file(dist_path, html)?
+		b.md2html(path)?
 	}
 	logger.info('end md to html')
 
