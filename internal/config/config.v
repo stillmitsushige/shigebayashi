@@ -12,7 +12,7 @@ pub mut:
 }
 
 // Config general settings for vss
-struct Config {
+pub struct Config {
 pub mut:
 	build       Build
 	title       string
