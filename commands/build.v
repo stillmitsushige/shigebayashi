@@ -144,6 +144,16 @@ fn (mut b Builder) create_dist_dir() ? {
 	}
 }
 
+fn (mut b Builder) is_ignore(path string) bool {
+	// e.g. README.md
+	file_name := os.file_name(path)
+	// notify user that build was skipped
+	if file_name in b.config.build.ignore_files {
+		return true
+	}
+	return false
+}
+
 fn build(mut logger log.Log) ? {
 	println('Start building')
 	mut sw := time.new_stopwatch()
@@ -157,11 +167,8 @@ fn build(mut logger log.Log) ? {
 	mds := normalise_paths(os.walk_ext('.', '.md'))
 	logger.info('start md to html')
 	for path in mds {
-		// e.g. README.md
-		file_name := os.file_name(path)
-		// notify user that build was skipped
-		if file_name in b.config.build.ignore_files {
-			logger.info('$file_name is included in ignore_files, skip build')
+		if b.is_ignore(path) {
+			logger.info('$path is included in ignore_files, skip build')
 			continue
 		}
 		b.md2html(path)?
