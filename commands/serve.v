@@ -4,6 +4,7 @@ import cli
 import log
 import net.http
 import os
+import internal.config
 
 const cport = 8080
 
@@ -12,7 +13,7 @@ fn new_serve_cmd() cli.Command {
 		name: 'serve'
 		description: 'serve dist'
 		usage: 'vss serve'
-		execute: fn (cmd cli.Command) ? {
+		execute: fn (cmd cli.Command) ! {
 			mut logger := log.Log{}
 			logger.set_level(log.Level.info)
 			serve(mut logger) or {
@@ -72,7 +73,7 @@ mut:
 	time_stamp i64
 }
 
-fn watch(path string, mut logger log.Log) {
+fn watch(path string, config config.Config, mut logger log.Log) {
 	mut res := []string{}
 	os.walk_with_context(path, &res, fn (mut res []string, fpath string) {
 		res << fpath
@@ -98,7 +99,7 @@ fn watch(path string, mut logger log.Log) {
 				println('modified file: $w.path')
 				w.time_stamp = now
 
-				build(mut logger) or {
+				build(config, mut logger) or {
 					logger.error(err.msg())
 					println('Build failed')
 				}
@@ -107,7 +108,7 @@ fn watch(path string, mut logger log.Log) {
 	}
 }
 
-fn serve(mut logger log.Log) ? {
+fn serve(mut logger log.Log) ! {
 	mut handler := MyHttpHandler{
 		root: 'dist'
 	}
@@ -115,9 +116,20 @@ fn serve(mut logger log.Log) ? {
 		handler: handler
 		port: commands.cport
 	}
-	println('http://localhost:$commands.cport')
-	w := go watch('.', mut logger)
-	server.listen_and_serve() or { panic(err) }
+
+	local_base_url := 'http://localhost:$commands.cport/'
+	mut config := load_config(default_config)!
+	config.base_url = local_base_url
+	println(local_base_url)
+
+	// build before server startup
+	build(config, mut logger) or {
+		logger.error(err.msg())
+		println('Build failed')
+	}
+
+	w := go watch('.', config, mut logger)
+	server.listen_and_serve()
 
 	w.wait()
 }
