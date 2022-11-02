@@ -8,7 +8,7 @@ pub fn execute() {
 		name: 'vss'
 		version: '0.0.12'
 		description: 'static site generator'
-		execute: fn (cmd cli.Command) ? {
+		execute: fn (cmd cli.Command) ! {
 			println(cmd.help_message())
 		}
 	}

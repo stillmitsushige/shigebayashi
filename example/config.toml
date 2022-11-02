@@ -1,6 +1,6 @@
 title = "Open Sea"
 description = "Takumi Tsuruta's home page"
-# base_url = 'https://zztkm.github.io/vss/'
+base_url = 'https://zztkm.github.io/vss/'
 
 [build]
 ignore_files = ["ignore.md", "README.md"]
