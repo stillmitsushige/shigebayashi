@@ -22,14 +22,11 @@ jobs:
         with:
           check-latest: true
 
-      - name: Install Task
-        uses: arduino/setup-task@v1
-
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v2
 
       - name: Install deps
-        run: task setup
+        run: v install
 
       - name: Check if code is formatted
         run: |
@@ -37,7 +34,7 @@ jobs:
           v fmt -verify .          
 
       - name: Build ${{ github.event.repository.name }}
-        run: task build
+        run: v .
 
       - name: Run Tests
-        run: task test
+        run: v test .
