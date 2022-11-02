@@ -55,7 +55,7 @@ A static site generator
 ```toml
 title = "Open Sea"
 description = "Takumi Tsuruta's home page"
-baseUrl = 'https://zztkm.github.io/vss/'
+base_url = 'https://zztkm.github.io/vss/'
 ```
 
 ❯ cat layouts/index.html
